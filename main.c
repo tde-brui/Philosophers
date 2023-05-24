@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:36 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/20 17:19:34 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/05/24 13:56:10 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,20 @@ int	init_philos(t_philo *philo, int num_of_philos, char **argv)
 		philo[i].left_fork = &forks[i];
 		philo[i].right_fork = &forks[(i + 1) % num_of_philos];
 		philo[i].start_time = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
+		philo[i].curr_time = 0;
 		i++;
 	}
 	return (EXIT_SUCCESS);
+}
+
+void	think(pthread_mutex_t *p_lock, t_philo *philo)
+{
+	long long	curr_time;
+
+	pthread_mutex_lock(p_lock);
+	curr_time = time_diff(philo->start_time);
+	printf("%lld %d is thinking\n", curr_time, philo->id);
+	pthread_mutex_unlock(p_lock);
 }
 
 void	*philos_main_loop(void *arg)
@@ -52,8 +63,10 @@ void	*philos_main_loop(void *arg)
 		usleep(50);
 	while (philo->num_meals < philo->max_meals)
 	{
-		forks_up(p_lock, philo);
-		if (eat(p_lock, philo))
+		if (philo->num_meals > 0)
+			think(&p_lock, philo);
+		forks_up(&p_lock, philo);
+		if (eat(&p_lock, philo))
 			break ;
 		forks_down(philo);
 		if (philo->num_meals == philo->max_meals - 1)
@@ -61,6 +74,7 @@ void	*philos_main_loop(void *arg)
 		sleepy(p_lock, philo);
 		philo->num_meals++;
 	}
+	pthread_mutex_destroy(&p_lock);
 	return (EXIT_SUCCESS);
 }
 

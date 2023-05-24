@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:57:40 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/20 17:19:06 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/05/24 13:44:30 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-void	forks_up(pthread_mutex_t p_lock, t_philo *philo)
+void	forks_up(pthread_mutex_t *p_lock, t_philo *philo)
 {
 	fork_up(p_lock, philo, philo->left_fork);
 	fork_up(p_lock, philo, philo->right_fork);
