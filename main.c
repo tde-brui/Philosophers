@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:36 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/19 16:10:46 by tijmendebru   ########   odam.nl         */
+/*   Updated: 2023/05/20 17:19:34 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@ int	init_philos(t_philo *philo, int num_of_philos, char **argv)
 {
 	int				i;
 	pthread_mutex_t	*forks;
-	
+	struct timeval	tv;
+
 	i = 0;
 	forks = malloc(sizeof(pthread_mutex_t) * num_of_philos);
 	if (!forks)
 		return (EXIT_FAILURE);
 	init_forks(forks, num_of_philos);
+	gettimeofday(&tv, NULL);
 	while (i < num_of_philos)
 	{
 		philo[i].id = i;
@@ -33,6 +35,7 @@ int	init_philos(t_philo *philo, int num_of_philos, char **argv)
 		philo[i].max_meals = ft_atoi(argv[5]);
 		philo[i].left_fork = &forks[i];
 		philo[i].right_fork = &forks[(i + 1) % num_of_philos];
+		philo[i].start_time = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 		i++;
 	}
 	return (EXIT_SUCCESS);
@@ -40,34 +43,24 @@ int	init_philos(t_philo *philo, int num_of_philos, char **argv)
 
 void	*philos_main_loop(void *arg)
 {
-	t_philo	*philo;
-	pthread_mutex_t	mutex;
+	t_philo			*philo;
+	pthread_mutex_t	p_lock;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_init(&mutex, NULL);
+	pthread_mutex_init(&p_lock, NULL);
+	if (philo->id % 2 != 0)
+		usleep(50);
 	while (philo->num_meals < philo->max_meals)
 	{
-		pthread_mutex_lock(&mutex);
-		pthread_mutex_lock(philo->left_fork);
-		printf("%d has taken left fork!\n", philo->id);
-		pthread_mutex_lock(philo->right_fork);
-		printf("%d has taken right fork!\n", philo->id);
-		pthread_mutex_unlock(&mutex);
-		
-		printf("%d is eating\n", philo->id);
-		usleep(philo->time_to_eat);
-
-		pthread_mutex_unlock(philo->left_fork);
-		printf("%d has put down left fork\n", philo->id);
-		pthread_mutex_unlock(philo->right_fork);
-		printf("%d has put down right fork\n", philo->id);
-
-		printf("%d is sleeping\n", philo->id);
-		usleep(philo->time_to_sleep);
-		
+		forks_up(p_lock, philo);
+		if (eat(p_lock, philo))
+			break ;
+		forks_down(philo);
+		if (philo->num_meals == philo->max_meals - 1)
+			break ;
+		sleepy(p_lock, philo);
 		philo->num_meals++;
 	}
-	printf("Philosopher %d has finished eating!\n", philo->id);
 	return (EXIT_SUCCESS);
 }
 
@@ -107,6 +100,5 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	init_philos(philo, num_of_philos, argv);
 	create_philos(philo, num_of_philos);
-	//printf("%d\n", philo[3].time_to_die);
 	return (EXIT_SUCCESS);
 }

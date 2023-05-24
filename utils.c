@@ -6,9 +6,11 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:57:40 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/17 09:57:44 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/05/20 17:19:06 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "philo.h"
 
 int	ft_atoi(const char *str)
 {
@@ -35,4 +37,16 @@ int	ft_atoi(const char *str)
 	if (minuscounter % 2 == 1)
 		result *= -1;
 	return (result);
+}
+
+void	forks_up(pthread_mutex_t p_lock, t_philo *philo)
+{
+	fork_up(p_lock, philo, philo->left_fork);
+	fork_up(p_lock, philo, philo->right_fork);
+}
+
+void	forks_down(t_philo *philo)
+{
+	fork_down(philo->left_fork);
+	fork_down(philo->right_fork);
 }
