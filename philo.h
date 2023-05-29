@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:16 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/24 13:44:38 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/05/29 20:28:26 by tijmendebru   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct philo_info{
 	int				max_meals;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	p_lock;
 	long long		start_time;
 	long long		curr_time;
 }t_philo;

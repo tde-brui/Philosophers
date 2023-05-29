@@ -1,6 +1,6 @@
 NAME = philo
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 OBJECT = $(SOURCES:.c=.o)
 SOURCES = \
 	announcements.c \
@@ -15,7 +15,7 @@ $(NAME): $(OBJECT)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJECT)
 
 %.o: %.c
-	$(CC) $(CLFAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean: 
 	rm -rf $(OBJECT)
