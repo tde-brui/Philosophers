@@ -1,6 +1,6 @@
 NAME = philo
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 OBJECT = $(SOURCES:.c=.o)
 SOURCES = \
 	announcements.c \

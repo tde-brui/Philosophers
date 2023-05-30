@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:57:40 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/24 13:44:30 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/05/30 12:24:00 by tijmendebru   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-void	forks_up(pthread_mutex_t *p_lock, t_philo *philo)
+void	forks_up(pthread_mutex_t p_lock, t_philo *philo)
 {
 	fork_up(p_lock, philo, philo->left_fork);
 	fork_up(p_lock, philo, philo->right_fork);
@@ -49,4 +49,45 @@ void	forks_down(t_philo *philo)
 {
 	fork_down(philo->left_fork);
 	fork_down(philo->right_fork);
+}
+
+int	input_val(int argc, char **argv)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	if (argc != 6)
+	{
+		printf("This program takes 5 arguments\n");
+		return (EXIT_FAILURE);
+	}
+	while (i < argc)
+	{
+		j = 0;
+		while (argv[i][j])
+		{
+			if (argv[i][j] < '0' || argv[i][j] > '9')
+			{
+				printf("Arguments can only consist of digits\n");
+				return (EXIT_FAILURE);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
+void	free_everything(t_philo *philo, pthread_mutex_t *forks)
+{
+	free(philo->info);
+	free(philo);
+	free(forks);
+}
+
+void	free_philos_and_forks(t_philo *philo, pthread_mutex_t *forks)
+{
+	free(philo);
+	free(forks);
 }
