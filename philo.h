@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:16 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/30 12:24:47 by tijmendebru   ########   odam.nl         */
+/*   Updated: 2023/06/02 16:32:43 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct info{
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				max_meals;
+	int				i;
 }t_info;
 
 typedef struct philo{
@@ -36,7 +37,6 @@ typedef struct philo{
 	long long		curr_time;
 	t_info			*info;
 }t_philo;
-
 
 int			ft_atoi(const char *str);
 void		init_forks(pthread_mutex_t *forks, int num_of_philos);
@@ -52,5 +52,6 @@ int			input_val(int argc, char **argv);
 void		free_philos_and_forks(t_philo *philo, pthread_mutex_t *forks);
 void		think(pthread_mutex_t p_lock, t_philo *philo);
 void		free_everything(t_philo *philo, pthread_mutex_t *forks);
+void		ft_usleep(int ms);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:36 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/05/30 13:43:07 by tijmendebru   ########   odam.nl         */
+/*   Updated: 2023/06/02 17:56:02 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,14 @@ int	init_philos(pthread_mutex_t *forks, t_philo *philo, int num_of_philos, char 
 	philo->info->time_to_eat = ft_atoi(argv[3]) * 1000;
 	philo->info->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	philo->info->max_meals = ft_atoi(argv[5]);
+	philo->info->i = 0;
+	return (EXIT_SUCCESS);
+}
+
+int	death_check(t_philo *philo)
+{
+	if (philo->info->i == 1)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -52,10 +60,11 @@ void	*philos_main_loop(void *arg)
 	pthread_mutex_init(&p_lock, NULL);
 	if (philo->id % 2 != 0)
 		usleep(50);
-	while (philo->num_meals < philo->info->max_meals)
+	while (philo->num_meals < philo->info->max_meals && philo->info->i == 0)
 	{
 		if (philo->num_meals > 0)
 			think(p_lock, philo);
+		death_check(philo);
 		forks_up(p_lock, philo);
 		if (eat(p_lock, philo))
 			break ;
@@ -93,18 +102,12 @@ int	create_philos(t_philo *philo, int num_of_philos)
 	return (EXIT_SUCCESS);
 }
 
-void	ft_leaks(void)
-{
-	system("leaks philo");
-}
-
 int	main(int argc, char **argv)
 {
 	int				num_of_philos;
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
-	
-	//atexit(ft_leaks);
+
 	if (input_val(argc, argv))
 		return (EXIT_FAILURE);
 	num_of_philos = ft_atoi(argv[1]);
