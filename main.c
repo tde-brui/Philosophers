@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:36 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/06/02 17:56:02 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/06/06 17:45:11 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	init_philos(pthread_mutex_t *forks, t_philo *philo, int num_of_philos, char 
 	int				i;
 	struct timeval	tv;
 	t_info			*info;
+	pthread_mutex_t	p_lock;
+	pthread_mutex_t	i_lock;
 
 	i = 0;
 	init_forks(forks, num_of_philos);
@@ -24,15 +26,16 @@ int	init_philos(pthread_mutex_t *forks, t_philo *philo, int num_of_philos, char 
 	info = malloc(sizeof(t_info));
 	if (!info)
 		return (EXIT_FAILURE);
+	pthread_mutex_init(&p_lock, NULL);
+	pthread_mutex_init(&i_lock, NULL);
 	while (i < num_of_philos)
 	{
 		philo[i].id = i + 1;
 		philo[i].num_meals = 0;
 		philo[i].num_of_philos = num_of_philos;
+		philo[i].curr_time = 0;
 		philo[i].left_fork = &forks[i];
 		philo[i].right_fork = &forks[(i + 1) % num_of_philos];
-		philo[i].start_time = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
-		philo[i].curr_time = 0;
 		philo[i].info = info;
 		i++;
 	}
@@ -40,41 +43,33 @@ int	init_philos(pthread_mutex_t *forks, t_philo *philo, int num_of_philos, char 
 	philo->info->time_to_eat = ft_atoi(argv[3]) * 1000;
 	philo->info->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	philo->info->max_meals = ft_atoi(argv[5]);
+	philo->info->start_time = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 	philo->info->i = 0;
-	return (EXIT_SUCCESS);
-}
-
-int	death_check(t_philo *philo)
-{
-	if (philo->info->i == 1)
-		return (EXIT_FAILURE);
+	philo->info->p_lock = p_lock;
+	philo->info->i_lock = i_lock;
 	return (EXIT_SUCCESS);
 }
 
 void	*philos_main_loop(void *arg)
 {
 	t_philo			*philo;
-	pthread_mutex_t	p_lock;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_init(&p_lock, NULL);
 	if (philo->id % 2 != 0)
-		usleep(50);
+		ft_usleep(50);
 	while (philo->num_meals < philo->info->max_meals && philo->info->i == 0)
 	{
 		if (philo->num_meals > 0)
-			think(p_lock, philo);
-		death_check(philo);
-		forks_up(p_lock, philo);
-		if (eat(p_lock, philo))
+			think(philo);
+		forks_up(philo);
+		if (eat(philo))
 			break ;
 		forks_down(philo);
 		if (philo->num_meals == philo->info->max_meals - 1)
 			break ;
-		sleepy(p_lock, philo);
+		sleepy(philo);
 		philo->num_meals++;
 	}
-	pthread_mutex_destroy(&p_lock);
 	return (EXIT_SUCCESS);
 }
 
@@ -116,20 +111,11 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	philo = malloc(num_of_philos * sizeof(t_philo));
 	if (!philo)
-	{
-		free(forks);
-		return (EXIT_FAILURE);
-	}
+		return (free(forks), EXIT_FAILURE);
 	if (init_philos(forks, philo, num_of_philos, argv))
-	{
-		free_philos_and_forks(philo, forks);
-		return (EXIT_FAILURE);
-	}
+		return (free_philos_and_forks(philo, forks), EXIT_FAILURE);
 	if (create_philos(philo, num_of_philos))
-	{
-		free_everything(philo, forks);
-		return (EXIT_FAILURE);
-	}
+		return (free_everything(philo, forks), EXIT_FAILURE);
 	free_everything(philo, forks);
 	return (EXIT_SUCCESS);
 }

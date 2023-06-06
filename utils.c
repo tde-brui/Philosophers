@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:57:40 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/06/02 16:01:32 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/06/06 14:41:40 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,11 @@ void	free_philos_and_forks(t_philo *philo, pthread_mutex_t *forks)
 {
 	free(philo);
 	free(forks);
+}
+
+void	print_message(t_philo *philo, long long time, char *msg)
+{
+	pthread_mutex_lock(&philo->info->p_lock);
+	printf("%lld %d %s\n", time, philo->id, msg);
+	pthread_mutex_unlock(&philo->info->p_lock);
 }

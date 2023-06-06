@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/20 15:25:06 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/06/02 17:03:54 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/06/06 15:01:41 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ void	ft_usleep(int ms)
 	{
 		gettimeofday(&tv_curr, NULL);
 		curr = ((tv_curr.tv_sec * 1000) + (tv_curr.tv_usec / 1000)) - s_time;
-		usleep(75);
+		usleep(300);
 	}
 }

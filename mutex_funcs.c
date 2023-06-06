@@ -6,7 +6,7 @@
 /*   By: tijmendebruine <tijmendebruine@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 20:24:46 by tijmendebru   #+#    #+#                 */
-/*   Updated: 2023/06/02 15:59:39 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/06/06 14:55:39 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	destroy_forks(pthread_mutex_t *forks, int num_of_philos)
 	}
 }
 
-void	forks_up(pthread_mutex_t p_lock, t_philo *philo)
+void	forks_up(t_philo *philo)
 {
-	fork_up(p_lock, philo, philo->left_fork);
-	fork_up(p_lock, philo, philo->right_fork);
+	fork_up(philo, philo->left_fork);
+	fork_up(philo, philo->right_fork);
 }
 
 void	forks_down(t_philo *philo)
