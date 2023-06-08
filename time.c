@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/20 15:25:06 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/06/06 15:01:41 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/06/08 20:57:12 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,16 @@ void	ft_usleep(int ms)
 		curr = ((tv_curr.tv_sec * 1000) + (tv_curr.tv_usec / 1000)) - s_time;
 		usleep(300);
 	}
+}
+
+bool	check_died(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->info->death_lock);
+	if (philo->info->died == true)
+	{
+		pthread_mutex_unlock(&philo->info->death_lock);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->info->death_lock);
+	return (false);
 }
