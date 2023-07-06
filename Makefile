@@ -7,7 +7,9 @@ SOURCES = \
 	main.c \
 	mutex_funcs.c \
 	time.c \
-	utils.c
+	utils.c \
+	utils2.c \
+	monitoring.c
 OBJECT = $(SOURCES:.c=.o)
 
 all: $(NAME)
