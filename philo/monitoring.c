@@ -6,22 +6,11 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/06 15:17:09 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/06 20:28:02 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 17:36:50 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	check_finished(t_philo *philo, unsigned	int i)
-{
-	pthread_mutex_lock(&philo->info->monitor_lock);
-	if (philo[i].num_meals == philo->info->max_meals - 1)
-	{
-		philo[i].num_meals++;
-		philo->info->finished++;
-	}
-	pthread_mutex_unlock(&philo->info->monitor_lock);
-}
 
 int	check_died(t_philo *philo, int i)
 {
@@ -31,7 +20,13 @@ int	check_died(t_philo *philo, int i)
 	if (compare_eat_times(philo, death_time, i))
 	{
 		pthread_mutex_lock(&philo->info->p_lock);
-		print_message(philo, death_time, "has died");
+		if (!has_died(philo))
+		{
+			printf("%lld %d has died\n", death_time, philo[i].id);
+			pthread_mutex_unlock(&philo->info->p_lock);
+		}
+		else
+			pthread_mutex_unlock(&philo->info->p_lock);
 		pthread_mutex_lock(&philo->info->death_lock);
 		philo->info->died = true;
 		pthread_mutex_unlock(&philo->info->death_lock);
@@ -47,7 +42,6 @@ void	monitoring(t_philo *philo, int num_of_philos)
 	i = 0;
 	while (1)
 	{
-		check_finished(philo, i);
 		if (philo->info->finished == num_of_philos)
 			break ;
 		if (check_died(philo, i))

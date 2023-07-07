@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:57:40 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/06 20:19:55 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 17:25:11 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	input_val(int argc, char **argv)
 	int	j;
 
 	i = 1;
-	if (argc != 6)
+	if (argc != 6 && argc != 5)
 	{
 		printf("This program takes 5 arguments\n");
 		return (EXIT_FAILURE);

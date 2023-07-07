@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/06 19:55:03 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/06 20:17:32 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 17:01:04 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	compare_meals(t_philo *philo)
 {
 	pthread_mutex_lock (&philo->info->monitor_lock);
-	if ((philo->num_meals < philo->info->max_meals))
+	if ((philo->num_meals != philo->info->max_meals))
 	{
 		pthread_mutex_unlock(&philo->info->monitor_lock);
 		return (EXIT_FAILURE);
@@ -58,4 +58,11 @@ bool	has_died(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->info->death_lock);
 	return (EXIT_SUCCESS);
+}
+
+void	add_to_finished(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->info->monitor_lock);
+	philo->info->finished++;
+	pthread_mutex_unlock(&philo->info->monitor_lock);
 }

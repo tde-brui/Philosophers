@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:16 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/06 20:05:09 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 14:50:48 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ bool		has_died(t_philo *philo);
 int			compare_meals(t_philo *philo);
 int			compare_eat_num(t_philo *philo);
 int			compare_eat_times(t_philo *philo, long long death_time, int i);
+void		add_to_finished(t_philo *philo);
+void		add_to_meals(t_philo *philo);
 
 //mutex functions
 void		init_forks(pthread_mutex_t *forks, int num_of_philos);

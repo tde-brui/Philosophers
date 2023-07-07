@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:36 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/06 20:40:08 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 15:56:16 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,22 @@ void	init_info(t_philo *philo, char **argv)
 	pthread_mutex_t	p_lock;
 	pthread_mutex_t	i_lock;
 	pthread_mutex_t	m_lock;
+	int				i;
 
 	pthread_mutex_init(&p_lock, NULL);
 	pthread_mutex_init(&i_lock, NULL);
 	pthread_mutex_init(&m_lock, NULL);
+	i = 0;
 	gettimeofday(&tv, NULL);
+	while (argv[i])
+		i++;
 	philo->info->time_to_die = ft_atoi(argv[2]);
 	philo->info->time_to_eat = ft_atoi(argv[3]) * 1000;
 	philo->info->time_to_sleep = ft_atoi(argv[4]) * 1000;
-	philo->info->max_meals = ft_atoi(argv[5]);
+	if (i == 6)
+		philo->info->max_meals = ft_atoi(argv[5]);
+	else
+		philo->info->max_meals = -1;
 	philo->info->start_time = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 	philo->info->finished = 0;
 	philo->info->died = false;
@@ -82,11 +89,11 @@ void	*philos_main_loop(void *arg)
 			break ;
 		}
 		pthread_mutex_unlock(&philo->info->p_lock);
-		sleepy(philo);
-		pthread_mutex_lock(&philo->info->monitor_lock);
-		philo->num_meals++;
-		pthread_mutex_unlock(&philo->info->monitor_lock);
+		if (philo->num_meals != philo->info->max_meals)
+			sleepy(philo);
+		add_to_meals(philo);
 	}
+	add_to_finished(philo);
 	return (EXIT_SUCCESS);
 }
 

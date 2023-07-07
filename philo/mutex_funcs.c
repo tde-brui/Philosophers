@@ -6,7 +6,7 @@
 /*   By: tijmendebruine <tijmendebruine@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 20:24:46 by tijmendebru   #+#    #+#                 */
-/*   Updated: 2023/07/06 19:38:27 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 15:29:49 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,15 @@ void	destroy_mutexes(t_philo *philo, int num_of_philos)
 	pthread_mutex_destroy(&philo->info->p_lock);
 }
 
-void	forks_up(t_philo *philo)
-{
-	fork_up(philo, philo->left_fork);
-	fork_up(philo, philo->right_fork);
-}
-
 void	forks_down(t_philo *philo)
 {
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
+}
+
+void	add_to_meals(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->info->monitor_lock);
+	philo->num_meals++;
+	pthread_mutex_unlock(&philo->info->monitor_lock);
 }

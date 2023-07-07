@@ -6,11 +6,17 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/20 15:09:45 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/06 20:20:21 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/07 16:02:04 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	forks_up(t_philo *philo)
+{
+	fork_up(philo, philo->left_fork);
+	fork_up(philo, philo->right_fork);
+}
 
 void	fork_up(t_philo *philo, pthread_mutex_t *fork)
 {
