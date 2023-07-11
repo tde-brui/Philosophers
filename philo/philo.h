@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:16 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/11 14:56:50 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/11 16:17:26 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ void		fork_down(pthread_mutex_t *fork);
 void		eat(t_philo *philo);
 void		sleepy( t_philo *philo);
 void		think(t_philo *philo);
+
+//one philo thread function
+void		*onephilo(void *arg);
 
 //time functions
 void		ft_usleep(int ms);
