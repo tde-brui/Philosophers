@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:57:40 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/07 17:25:11 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/11 15:06:33 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,28 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
+int	ft_strncmp(const char *str1, const char *str2, size_t size)
+{
+	unsigned long	i;
+	unsigned char	*ptr;
+	unsigned char	*ptr1;
+
+	i = 0;
+	ptr = (unsigned char *)str1;
+	if (!ptr)
+		return (0);
+	ptr1 = (unsigned char *)str2;
+	if (!ptr1)
+		return (0);
+	while (i < size)
+	{
+		if (ptr[i] != ptr1[i] || ptr[i] == '\0' || ptr1[i] == '\0')
+			return (ptr[i] - ptr1[i]);
+		i++;
+	}
+	return (0);
+}
+
 int	input_val(int argc, char **argv)
 {
 	int	i;
@@ -46,20 +68,16 @@ int	input_val(int argc, char **argv)
 
 	i = 1;
 	if (argc != 6 && argc != 5)
-	{
-		printf("This program takes 5 arguments\n");
 		return (EXIT_FAILURE);
-	}
+	if (!ft_strncmp("0", argv[1], 3))
+		return (EXIT_FAILURE);
 	while (i < argc)
 	{
 		j = 0;
 		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-			{
-				printf("Arguments can only consist of digits\n");
 				return (EXIT_FAILURE);
-			}
 			j++;
 		}
 		i++;
@@ -67,25 +85,9 @@ int	input_val(int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-void	free_everything(t_philo *philo, pthread_mutex_t *forks)
-{
-	free(philo->info);
-	free(philo);
-	free(forks);
-}
-
-void	free_philos_and_forks(t_philo *philo, pthread_mutex_t *forks)
-{
-	free(philo);
-	free(forks);
-}
-
 void	print_message(t_philo *philo, long long time, char *msg)
 {
 	if (!has_died(philo))
-	{
 		printf("%lld %d %s\n", time, philo->id, msg);
-		pthread_mutex_unlock(&philo->info->p_lock);
-	}
 	pthread_mutex_unlock(&philo->info->p_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 09:49:36 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/07/07 15:56:16 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/07/11 15:41:27 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	init_philos(pthread_mutex_t *forks, t_philo *philo, int num, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-void	*philos_main_loop(void *arg)
+void	*philos_main(void *arg)
 {
 	t_philo			*philo;
 
@@ -97,6 +97,16 @@ void	*philos_main_loop(void *arg)
 	return (EXIT_SUCCESS);
 }
 
+void	*onephilo(void *arg)
+{
+	t_philo			*philo;
+
+	philo = (t_philo *)arg;
+	fork_up(philo, philo->left_fork);
+	usleep(philo->info->time_to_die);
+	return (EXIT_SUCCESS);
+}
+
 int	create_philos(t_philo *philo, int num_of_philos)
 {
 	pthread_t	*threads;
@@ -108,7 +118,9 @@ int	create_philos(t_philo *philo, int num_of_philos)
 		return (EXIT_FAILURE);
 	while (i < num_of_philos)
 	{
-		if (pthread_create(threads + i, NULL, &philos_main_loop, philo + i))
+		if (num_of_philos == 1)
+			(pthread_create(threads + i, NULL, &onephilo, philo + i));
+		else if (pthread_create(threads + i, NULL, &philos_main, philo + i))
 			return (detach_threads(i, threads));
 		i++;
 	}

@@ -1,6 +1,6 @@
 NAME = philo
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 BUILD_DIR = build
 SOURCES = \
 	announcements.c \
@@ -9,7 +9,8 @@ SOURCES = \
 	time.c \
 	utils.c \
 	utils2.c \
-	monitoring.c
+	monitoring.c \
+	free.c
 OBJECT = $(SOURCES:.c=.o)
 
 all: $(NAME)
